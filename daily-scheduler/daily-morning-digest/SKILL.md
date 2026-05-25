@@ -9,8 +9,9 @@ category: daily-scheduler
 每天早晨分析 Dida365 中的任务，生成今日日程安排并推送到微信。
 
 > ⚠️ 本 skill 由 cronjob `morning-digest`（每天 08:00）加载执行。
-> 执行完毕后用 `send_message` 将结果发送到微信平台，
+> 组装好消息后，用 `send_message` 发送到微信：
 > target = `weixin:o9cq808c1Lky6PCGruZT10z1Qz8Y@im.wechat`
+> 你的最终回复只是执行日志（我会看到），微信消息通过 send_message 发送。
 
 ---
 
@@ -66,9 +67,9 @@ mcp_dida365_filter_tasks(filter={
 | ⚠️ 拖延 | 同一高优任务在 Dida365 中超过 3 天未完成 |
 | ⚠️ 冲突 | 多个高优任务的截止日期重叠在同一天 |
 
-### Step 6: 组装消息并发送
+### Step 6: 组装消息并发送到微信
 
-用以下格式组装消息，通过 `send_message` 发送到微信：
+用以下格式组装消息，调用 `send_message(target="weixin:o9cq808c1Lky6PCGruZT10z1Qz8Y@im.wechat", message="..."` 发送：
 
 ```
 ☀️ 早安！{月/日 周X}
@@ -104,12 +105,12 @@ mcp_dida365_filter_tasks(filter={
 
 ### Step 7: 完成
 
-发送后即完成，不需要额外操作。
+生成最终回复后即完成。你的回复会自动投递到微信。
 
 ---
 
 ## 注意事项
 
-- 如果今日无任务，发送：`☀️ 早安！今天没有待办事项，好好休息或规划一下新任务吧 📝`
-- 消息发到微信后，cronjob 会自动结束
+- 如果今日无任务，回复：`☀️ 早安！今天没有待办事项，好好休息或规划一下新任务吧 📝`
 - 不要在 Dida365 中修改任何任务数据（只读操作），时间安排只体现在消息中，实际调整由 evening-review 处理
+- 最终回复会被自动投递到微信，不需要调用 send_message
