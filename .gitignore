@@ -1,0 +1,5 @@
+# Hermes skills backup
+*.swp
+*.swo
+*~
+.DS_Store
